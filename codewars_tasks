@@ -1,0 +1,566 @@
+shtag Generator
+PHP:
+function generateHashtag($str) {
+    if (trim($str) === '') {
+        return false;
+    }
+
+    $words = preg_split('/\s+/', $str);
+    $hashtag = '#';
+
+    foreach ($words as $word) {
+        $hashtag .= ucfirst($word);
+    }
+
+    if (strlen($hashtag) > 140) {
+        return false;
+    }
+
+    return $hashtag; 
+}
+last monthRefactorDiscuss
+4 kyu
+Human readable duration format
+PHP:
+function format_duration($seconds) {
+    if ($seconds === 0) {
+        return "now";
+    }
+
+    $units = [
+        'year' => 60 * 60 * 24 * 365,
+        'day' => 60 * 60 * 24,
+        'hour' => 60 * 60,
+        'minute' => 60,
+        'second' => 1,
+    ];
+
+    $components = [];
+    foreach ($units as $unit => $value) {
+        $count = intval($seconds / $value);
+        if ($count > 0) {
+            $components[] = $count . ' ' . $unit . ($count > 1 ? 's' : '');
+            $seconds %= $value;
+        }
+    }
+
+    $lastComponent = array_pop($components);
+    $formatted = implode(', ', $components);
+
+    if (!empty($components)) {
+        $formatted .= ' and ';
+    }
+    $formatted .= $lastComponent;
+
+    return $formatted;
+}
+last monthRefactorDiscuss
+4 kyu
+Snail
+PHP:
+function snail(array $array): array {
+    $result = [];
+
+    while (count($array) > 0) {
+        // Traverse right
+        $result = array_merge($result, array_shift($array));
+
+        // Traverse down
+        if (count($array) > 0 && count($array[0]) > 0) {
+            foreach ($array as &$row) {
+                array_push($result, array_pop($row));
+            }
+        }
+
+        // Traverse left
+        if (count($array) > 0) {
+            $lastRow = array_pop($array);
+            $result = array_merge($result, array_reverse($lastRow));
+        }
+
+        // Traverse up
+        if (count($array) > 0 && count($array[0]) > 0) {
+            for ($i = count($array) - 1; $i >= 0; $i--) {
+                array_push($result, array_shift($array[$i]));
+            }
+        }
+    }
+
+    return $result;
+}
+last monthRefactorDiscuss
+5 kyu
+Directions Reduction
+PHP:
+function dirReduc($arr) {
+    $stack = [];
+    $oppositeDirections = [
+        "NORTH" => "SOUTH",
+        "SOUTH" => "NORTH",
+        "EAST" => "WEST",
+        "WEST" => "EAST",
+    ];
+
+    foreach ($arr as $direction) {
+        if (count($stack) > 0 && $oppositeDirections[$direction] === $stack[count($stack) - 1]) {
+            // The current direction is the opposite of the last direction on the stack
+            array_pop($stack);
+        } else {
+            // Push the direction onto the stack
+            array_push($stack, $direction);
+        }
+    }
+
+    return $stack;
+}
+2 months agoRefactorDiscuss
+5 kyu
+RGB To Hex Conversion
+PHP:
+function rgb($r, $g, $b) {
+    $result = '';
+    array_map(
+        function($number) use (&$result) {
+            $result .= sprintf('%02X', min(255, max(0, $number)));
+        },
+        [$r, $g, $b]
+    );
+    return $result;
+}
+2 months agoRefactorDiscuss
+5 kyu
+Human Readable Time
+PHP:
+function human_readable($seconds) {
+    $hours = floor($seconds / 3600);
+    $minutes = floor(($seconds % 3600) / 60);
+    $seconds = $seconds % 60;
+
+    return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+}
+2 months agoRefactorDiscuss
+5 kyu
+Integers: Recreation One
+PHP:
+function listSquared($m, $n) {
+    $result = [];
+
+    for ($i = $m; $i <= $n; $i++) {
+        $sum_of_squared_divisors = 0;
+
+        for ($j = 1; $j <= sqrt($i); $j++) {
+            if ($i % $j == 0) {
+                $sum_of_squared_divisors += $j * $j;
+                if ($j * $j != $i / $j * $i / $j) {
+                    $sum_of_squared_divisors += ($i / $j) * ($i / $j);
+                }
+            }
+        }
+
+        $square_root = sqrt($sum_of_squared_divisors);
+        if ($square_root == intval($square_root)) {
+            $result[] = [$i, $sum_of_squared_divisors];
+        }
+    }
+
+    return $result;
+}
+2 months agoRefactorDiscuss
+5 kyu
+Moving Zeros To The End
+PHP:
+function moveZeros(array $items): array
+{
+  $result =[];
+  $zero_count = 0;
+  foreach($items as $item){
+    var_dump($item);
+    if(is_numeric($item) && $item == 0){
+      print_r($item.PHP_EOL);
+      $zero_count++;
+    } else{
+      $result[] = $item;
+    }
+  }
+  $result = array_pad($result,count($items),0);
+  return $result;
+}
+2 months agoRefactorDiscuss
+6 kyu
+If you can read this...
+PHP:
+function to_nato($words){
+  $words = strtolower($words);
+  $result = '';
+  for($i = 0;$i<strlen($words);$i++){
+    $buff = $words[$i];
+    if($buff == ' ')
+      continue;
+    if(isset(Constants::$NATO[$buff])){
+      $result .= Constants::$NATO[$buff];
+    } else {
+      $result .= $buff;
+    }
+    $result .= ' ';
+  }
+  return trim($result);
+}
+2 months agoRefactorDiscuss
+6 kyu
+Build Tower
+PHP:
+function tower_builder(int $n): array {
+    $result = [];
+    for ($i = 0; $i < $n; $i++) {
+        $spaces = $n - $i - 1;
+        $stars = 2 * $i + 1;
+        $result[] = str_repeat(' ', $spaces) . str_repeat('*', $stars) . str_repeat(' ', $spaces);
+    }
+    return $result;
+}
+2 months agoRefactorDiscuss
+5 kyu
+Primes in numbers
+PHP:
+function primeFactors($n) {
+    $array = [];
+    $result = '';
+    
+    // Divide n by 2 until it's odd
+    while ($n % 2 == 0) {
+        if (!isset($array[2])) {
+            $array[2] = 0;
+        }
+        $array[2]++;
+        $n = $n / 2;
+    }
+    
+    // Now n must be odd, so start from 3 and check every odd number
+    for ($i = 3; $i <= sqrt($n); $i += 2) {
+        while ($n % $i == 0) {
+            if (!isset($array[$i])) {
+                $array[$i] = 0;
+            }
+            $array[$i]++;
+            $n = $n / $i;
+        }
+    }
+    
+    // If n is a prime number greater than 2, add it to the array
+    if ($n > 2) {
+        $array[$n] = 1;
+    }
+    
+    // Build the result string
+    foreach ($array as $key => $value) {
+        $result .= $value > 1 ? '(' . $key . '**' . $value . ')' : '(' . $key . ')';
+    }
+    
+    return $result;
+}
+2 months agoRefactorDiscuss
+6 kyu
+Consecutive strings
+PHP:
+function longestConsec($strarr, $k) {
+  $result = "";
+  if($k > 0){
+    for($i=0;$i<=(count($strarr)-$k);$i++){
+      $buff = implode(array_slice($strarr,$i,$k));
+      if(strlen($result)<strlen($buff)){
+        $result = $buff;
+      }
+    }
+  }
+  return $result;
+}
+2 months agoRefactorDiscuss
+5 kyu
+Weight for weight
+PHP:
+function orderWeight($str) {
+    $numbers = explode(" ", $str);
+    usort($numbers, function($a, $b) {
+        $weightA = array_sum(str_split($a));
+        $weightB = array_sum(str_split($b));
+
+        if ($weightA == $weightB) {
+            return strcmp($a, $b); // For equal weights, sort as strings
+        }
+
+        return $weightA <=> $weightB; // Sort by weight
+    });
+
+    return implode(" ", $numbers);
+}
+2 months agoRefactorDiscuss
+6 kyu
+Detect Pangram
+PHP:
+function detect_pangram($string) {
+  $alpha = range('a','z');
+  array_map(
+    function($letter) use (&$alpha){
+      $buff = ord($letter);
+      if($buff > 96 && $buff < 123)
+        $alpha[$buff] = 1;
+    },
+    str_split(strtolower($string))
+  );
+  return (array_sum($alpha) >= 26);
+
+}
+2 months agoRefactor
+function detect_pangram($string) {
+  $alpha = array_fill(97,26,0);
+  array_map(
+    function($letter) use (&$alpha){
+      $buff = ord($letter);
+      if($buff > 96 && $buff < 123)
+        $alpha[$buff] = 1;
+    },
+    str_split(strtolower($string))
+  );
+  return (array_sum($alpha) >= 26);
+
+  }
+2 months agoRefactorDiscuss
+6 kyu
+Multiples of 3 or 5
+PHP:
+function solution($number){
+  $number--;
+  if($number && ($number>0)){
+    if(!($number%5) || !($number%3))
+      return ($number+solution($number));
+    return solution($number);
+  }
+  return 0;
+}
+2 months agoRefactorDiscuss
+6 kyu
+Find The Parity Outlier
+PHP:
+function find($integers) {
+  $result = array();
+  array_map(
+    function($num) use (&$result) {
+      $num%2 ? $result[1][] = $num : $result[0][] = $num;
+    }
+    ,$integers);
+  return(count($result[0])>count($result[1]) ? end($result[1]) : end($result[0]) );
+}
+2 months agoRefactorDiscuss
+6 kyu
+Decode the Morse code
+PHP:
+function decode_morse(string $code): string {
+    return strtr(trim($code), MORSE_CODE + ['   ' => ' ',' ' => '']);
+}
+2 months agoRefactor
+function decode_morse(string $code): string {
+    $words = explode('   ',trim($code));
+    $result = '';
+    if($code == '...---...'){
+      return 'SOS';
+    }
+    foreach ($words as $word) {
+        array_map(
+            function($letter) use (&$result){
+                $result .= MORSE_CODE[$letter];
+            }
+            ,explode(' ',$word));
+            $result .= ' ';
+    }
+    return trim($result);
+}
+2 months agoRefactorDiscuss
+6 kyu
+Convert string to camel case
+PHP:
+function toCamelCase($str){
+    $first = $str[0];
+    $str = str_replace('-','_',$str);
+    $str = str_replace('_','',ucwords($str,'_'));
+    $str[0] = $first;
+    return $str;
+}
+2 months agoRefactorDiscuss
+function toCamelCase($str){
+    $first = $str[0];
+    $sepparators = ["-","_"];
+    array_map(
+        function($sepparator) use (&$str){
+            $str = ucwords($str,$sepparator);
+        }
+        ,$sepparators);
+    $str = str_replace($sepparators,'',$str);
+    $str[0] = $first;
+    return $str;
+}
+2 months agoRefactorDiscuss
+6 kyu
+Highest Scoring Word
+PHP:
+function high($x) {
+    $a = explode(' ',$x);
+    $b = array_map(function($data){
+        $sum = 0;
+        for ($i=0; $i < strlen($data); $i++) { 
+            $sum += ord($data[$i]) - 96;
+        }
+        return $sum;
+    },$a);
+    arsort($b);
+    return ($a[key($b)]);
+}
+2 months agoRefactorDiscuss
+7 kyu
+Shortest Word
+PHP:
+function findShort($str){
+      $i = 0;
+    $j = 0;
+    $m = [];
+    while($i < strlen($str)){
+        if($str[$i++] == ' '){
+            array_push($m,$j);
+            $j = 0;
+        } else {
+            $j++;
+        }
+    }
+    array_push($m,$j);
+    $min = $m[0];
+    foreach ($m as $key => $value) {
+        if($min>$value){
+            $min = $value;
+        }
+    }
+    return $min;
+}
+2 months agoRefactorDiscuss
+7 kyu
+Get the Middle Character
+PHP:
+function getMiddle($text) {
+    return (strlen($text)%2) ? $text[intval(strlen($text)/2)] : $text[strlen($text)/2-1].$text[strlen($text)/2];
+}
+2 months agoRefactorDiscuss
+7 kyu
+Count the divisors of a number
+PHP:
+function divisors($n) {
+    $i = 1; $j = 1;
+    while ($i <= $n/2) {
+        if(!($n%$i++)){
+            $j++;
+        }
+    }
+    return $j;
+}
+2 months agoRefactorDiscuss
+function divisors($n) {
+    $i = 1; $j = 1;
+    while ($i++ <= $n) {
+        if(!($n%$i)){
+            $j++;
+        }
+    }
+    return $j;
+}
+2 months agoRefactorDiscuss
+6 kyu
+Does my number look big in this?
+PHP:
+function narcissistic(int $value): bool {
+    $array_r = str_split($value);
+    return array_sum(array_map( function($item) use ($array_r) : int{
+      return pow($item,count($array_r));
+    },$array_r)) === $value;
+}
+2 months agoRefactorDiscuss
+6 kyu
+Sum of Digits / Digital Root
+PHP:
+function digital_root($number) {
+    while(strlen($number)>1){
+        $number = array_sum(str_split($number));
+    }
+    return $number;
+}
+2 months agoRefactorDiscuss
+Python:
+def digital_root(n):
+    while n >= 10:
+        n = sum(int(i) for i in str(n))
+    return n
+2 months agoRefactor
+6 kyu
+Sort the odd
+PHP:
+function sortArray(array $arr) : array {
+            $odd_arr = [];
+            foreach($arr as $num){
+              if($num%2!=0){
+                array_push($odd_arr,$num);
+              }
+            }
+
+            foreach($odd_arr as $num){
+                echo($num." ");
+            }
+            echo("<br>");
+            rsort($odd_arr);
+            foreach($odd_arr as $num){
+                echo($num." ");
+            }
+            echo("<br>");
+            for($i = 0; $i<count($arr); $i++){
+                if($arr[$i]%2!=0){
+                    $arr[$i] = array_pop($odd_arr);
+                }
+            }         
+
+            return $arr;
+}
+5 months agoRefactorDiscuss
+7 kyu
+Growth of a Population
+PHP:
+function nbYear($p0, $percent, $aug, $p) {
+  $year = 0;
+  while($p>$p0){
+    $p0 = intval($p0 + $p0*($percent/100) + $aug);
+    $year++;
+  }
+  return $year;
+}
+5 months agoRefactorDiscuss
+7 kyu
+Digit*Digit
+PHP:
+function square_digits($num): int {
+  $array = array_map('intval',str_split($num));
+  $result_string = "";
+  foreach($array as $number){
+    $result_string .= $number*$number;
+  }
+  return intval($result_string);
+}
+5 months agoRefactorDiscuss
+7 kyu
+Jaden Casing Strings
+PHP:
+function toJadenCase($string) 
+{
+  return ucwords($string);
+}
+5 months agoRefactor
+8 kyu
+Multiply
+C:
+int multiply(int a, int b) {
+  return a*b;
+}
+5 months agoRefactor
